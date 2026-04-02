@@ -1,0 +1,6 @@
+updraft/
+.git
+.env
+.env.example
+*.md
+import-db.sh
