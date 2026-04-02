@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:7.2-fpm
 
 # Install system dependencies + nginx
 RUN apt-get update && apt-get install -y \
@@ -31,6 +31,10 @@ RUN wget -q https://wordpress.org/latest.tar.gz -O /tmp/wordpress.tar.gz \
 # Copy wp-config and nginx config
 COPY wp-config.php /var/www/html/wp-config.php
 COPY nginx.conf /etc/nginx/conf.d/default.conf.template
+
+# Copy mu-plugin to expose all abilities via MCP
+RUN mkdir -p /var/www/html/wp-content/mu-plugins
+COPY mcp-expose-abilities.php /var/www/html/wp-content/mu-plugins/mcp-expose-abilities.php
 
 # Remove default nginx config
 RUN rm -f /etc/nginx/sites-enabled/default
