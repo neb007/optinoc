@@ -22,19 +22,22 @@ RUN { \
     echo 'max_input_time = 300'; \
 } > /usr/local/etc/php/conf.d/railway.ini
 
-# Download WordPress
+# Download WordPress core (without wp-content, stored separately)
 RUN wget -q https://wordpress.org/latest.tar.gz -O /tmp/wordpress.tar.gz \
     && tar -xzf /tmp/wordpress.tar.gz -C /tmp \
     && cp -a /tmp/wordpress/. /var/www/html/ \
     && rm -rf /tmp/wordpress /tmp/wordpress.tar.gz
 
+# Save default wp-content for first-run initialization
+RUN cp -a /var/www/html/wp-content /var/www/html/wp-content-default
+
+# Copy mu-plugin to default content (will be copied to volume on first run)
+RUN mkdir -p /var/www/html/wp-content-default/mu-plugins
+COPY mcp-expose-abilities.php /var/www/html/wp-content-default/mu-plugins/mcp-expose-abilities.php
+
 # Copy wp-config and nginx config
 COPY wp-config.php /var/www/html/wp-config.php
 COPY nginx.conf /etc/nginx/conf.d/default.conf.template
-
-# Copy mu-plugin to expose all abilities via MCP
-RUN mkdir -p /var/www/html/wp-content/mu-plugins
-COPY mcp-expose-abilities.php /var/www/html/wp-content/mu-plugins/mcp-expose-abilities.php
 
 # Remove default nginx config
 RUN rm -f /etc/nginx/sites-enabled/default
