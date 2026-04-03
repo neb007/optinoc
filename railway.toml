@@ -1,9 +1,10 @@
 [build]
 builder = "dockerfile"
 dockerfilePath = "Dockerfile"
+noCache = false
 
 [deploy]
-healthcheckPath = "/wp-admin/install.php"
+healthcheckPath = "/wp-login.php"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 5
