@@ -22,6 +22,9 @@ RUN { \
     echo 'max_input_time = 300'; \
 } > /usr/local/etc/php/conf.d/railway.ini
 
+# Hide PHP version
+RUN echo 'expose_php = Off' > /usr/local/etc/php/conf.d/security.ini
+
 # Download WordPress core (without wp-content, stored separately)
 RUN wget -q https://wordpress.org/latest.tar.gz -O /tmp/wordpress.tar.gz \
     && tar -xzf /tmp/wordpress.tar.gz -C /tmp \
